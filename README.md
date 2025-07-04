@@ -1,1 +1,3 @@
 # pido-rs
+
+BLAZINGLY FAST AND MEMORY SAFETY 
