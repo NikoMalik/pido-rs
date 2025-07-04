@@ -1,15 +1,15 @@
-use log::{debug, info};
 use num::Integer;
 use rayon::prelude::*;
 use serde::{Deserialize, Serialize};
 use std::fmt::Display;
+use tracing::{debug, info};
 
 /// Structure to hold results of even/odd checks
 #[derive(Serialize, Deserialize, Debug, PartialEq)]
 pub struct NumberCheck {
-    number: i32,
-    is_even: bool,
-    is_odd: bool,
+    pub number: i32,
+    pub is_even: bool,
+    pub is_odd: bool,
 }
 
 /// Checks if a number is even.
@@ -19,6 +19,13 @@ pub struct NumberCheck {
 ///
 /// # Returns
 /// * `true` if the number is even, `false` otherwise.
+///
+/// # Examples
+/// ```
+/// use pido_rs::is_even;
+/// assert_eq!(is_even(2), true);
+/// assert_eq!(is_even(3), false);
+/// ```
 pub fn is_even<T: Integer + Display>(n: T) -> bool {
     debug!("Checking if {} is even", n);
     n.is_even()
@@ -31,6 +38,13 @@ pub fn is_even<T: Integer + Display>(n: T) -> bool {
 ///
 /// # Returns
 /// * `true` if the number is odd, `false` otherwise.
+///
+/// # Examples
+/// ```
+/// use pido_rs::is_odd;
+/// assert_eq!(is_odd(3), true);
+/// assert_eq!(is_odd(2), false);
+/// ```
 pub fn is_odd<T: Integer + Display>(n: T) -> bool {
     debug!("Checking if {} is odd", n);
     !n.is_even()
