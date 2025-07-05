@@ -1,0 +1,11 @@
+repos:
+  - repo: https://github.com/monadix/pre-commit-cargo2nix
+    rev: v0.3
+    hooks:
+      - id: cargo2nix-gen
+  - repo: https://github.com/doublify/pre-commit-rust
+    rev: v1.0
+    hooks:
+      - id: fmt
+      - id: cargo-check
+      - id: clippy
