@@ -1,24 +1,22 @@
 use anyhow::Result;
 use clap::Parser;
 use indicatif::{ProgressBar, ProgressStyle};
-use pido_rs::{NumberCheck, parallel_check};
+use pido_rs::parallel_check;
 use rand::Rng;
-use serde_json;
 use thiserror::Error;
 use tokio::fs::File as AsyncFile;
 use tokio::io::AsyncWriteExt;
 use tracing::{error, info};
-use tracing_subscriber;
 
 #[derive(Error, Debug)]
 #[error("Pido-rs error")]
 enum PidoError {
     #[error("Failed to write output file: {0}")]
-    FileWriteError(#[from] std::io::Error),
+    FileWrite(#[from] std::io::Error),
     #[error("Failed to serialize results: {0}")]
-    SerializationError(#[from] bincode::Error),
+    Serialization(#[from] bincode::Error),
     #[error("Failed to serialize JSON: {0}")]
-    JsonError(#[from] serde_json::Error),
+    Json(#[from] serde_json::Error),
 }
 
 #[derive(Parser, Debug)]

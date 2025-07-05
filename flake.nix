@@ -56,10 +56,18 @@
         workspaceShell = rustPkgs.workspaceShell {
           packages = (with pkgs; [
             rustToolchain
+
+            pre-commit
           ])
           ++ [ cargo2nix.packages.${system}.cargo2nix ]
           ++ runtimeDeps ++ buildDeps;
         };
+
+        mkBashApp = script: flake-utils.lib.mkApp {
+          drv = pkgs.writers.writeBashBin "cargo2nix-gen" script;
+        };
+
+        pre-commit-exe = "${pkgs.pre-commit}/bin/pre-commit";
       in rec {
         packages = {
           default = (rustPkgs.workspace.pido-rs {}).bin;
@@ -68,11 +76,21 @@
         apps = {
           default = { type = "app"; program = "${packages.default}/bin/pido-rs"; };
 
-          cargo2nix-gen = flake-utils.lib.mkApp {
-            drv = pkgs.writers.writeBashBin "cargo2nix-gen" ''
-              ${cargo2nix.packages.${system}.cargo2nix}/bin/cargo2nix -o -l
-            '';
-          };
+          cargo2nix-gen = mkBashApp ''
+            ${cargo2nix.packages.${system}.cargo2nix}/bin/cargo2nix -o -l
+          '';
+
+          pre-commit-install = mkBashApp ''
+            ${pre-commit-exe} install
+          '';
+
+          pre-commit-update = mkBashApp ''
+            ${pre-commit-exe} autoupdate
+          '';
+
+          pre-commit-run = mkBashApp ''
+            ${pre-commit-exe} run --all-files
+          '';
         };
 
         devShells.default = workspaceShell;
